@@ -1,0 +1,169 @@
+version: "3"
+services:
+  namenode:
+    image: bde2020/hadoop-namenode:latest
+    container_name: namenode
+    hostname: namenode
+    restart: always
+    ports:
+      - "9870:9870"   # HDFS Web UI
+      - "9000:9000"   # HDFS RPC
+    volumes:
+      - namenode:/hadoop/dfs/name
+    environment:
+      - CLUSTER_NAME=ticket-cluster
+    env_file:
+      - ./hadoop.env
+
+  datanode1:
+    image: bde2020/hadoop-datanode:latest
+    container_name: datanode1
+    hostname: datanode1
+    restart: always
+    depends_on:
+      - namenode
+    volumes:
+      - datanode1:/hadoop/dfs/data
+    environment:
+      - SERVICE_PRECONDITION=namenode:9870
+    env_file:
+      - ./hadoop.env
+
+  datanode2:
+    image: bde2020/hadoop-datanode:latest
+    container_name: datanode2
+    hostname: datanode2
+    restart: always
+    depends_on:
+      - namenode
+    volumes:
+      - datanode2:/hadoop/dfs/data
+    environment:
+      - SERVICE_PRECONDITION=namenode:9870
+    env_file:
+      - ./hadoop.env
+
+  datanode3:
+    image: bde2020/hadoop-datanode:latest
+    container_name: datanode3
+    hostname: datanode3
+    restart: always
+    depends_on:
+      - namenode
+    volumes:
+      - datanode3:/hadoop/dfs/data
+    environment:
+      - SERVICE_PRECONDITION=namenode:9870
+    env_file:
+      - ./hadoop.env
+
+  datanode4:
+    image: bde2020/hadoop-datanode:latest
+    container_name: datanode4
+    hostname: datanode4
+    restart: always
+    depends_on:
+      - namenode
+    volumes:
+      - datanode4:/hadoop/dfs/data
+    environment:
+      - SERVICE_PRECONDITION=namenode:9870
+    env_file:
+      - ./hadoop.env
+
+  datanode5:
+    image: bde2020/hadoop-datanode:latest
+    container_name: datanode5
+    hostname: datanode5
+    restart: always
+    depends_on:
+      - namenode
+    volumes:
+      - datanode5:/hadoop/dfs/data
+    environment:
+      - SERVICE_PRECONDITION=namenode:9870
+    env_file:
+      - ./hadoop.env
+
+  datanode6:
+    image: bde2020/hadoop-datanode:latest
+    container_name: datanode6
+    hostname: datanode6
+    restart: always
+    depends_on:
+      - namenode
+    volumes:
+      - datanode6:/hadoop/dfs/data
+    environment:
+      - SERVICE_PRECONDITION=namenode:9870
+    env_file:
+      - ./hadoop.env
+
+  datanode7:
+    image: bde2020/hadoop-datanode:latest
+    container_name: datanode7
+    hostname: datanode7
+    restart: always
+    depends_on:
+      - namenode
+    volumes:
+      - datanode7:/hadoop/dfs/data
+    environment:
+      - SERVICE_PRECONDITION=namenode:9870
+    env_file:
+      - ./hadoop.env
+
+  datanode8:
+    image: bde2020/hadoop-datanode:latest
+    container_name: datanode8
+    hostname: datanode8
+    restart: always
+    depends_on:
+      - namenode
+    volumes:
+      - datanode8:/hadoop/dfs/data
+    environment:
+      - SERVICE_PRECONDITION=namenode:9870
+    env_file:
+      - ./hadoop.env
+
+  datanode9:
+    image: bde2020/hadoop-datanode:latest
+    container_name: datanode9
+    hostname: datanode9
+    restart: always
+    depends_on:
+      - namenode
+    volumes:
+      - datanode9:/hadoop/dfs/data
+    environment:
+      - SERVICE_PRECONDITION=namenode:9870
+    env_file:
+      - ./hadoop.env
+
+  datanode10:
+    image: bde2020/hadoop-datanode:latest
+    container_name: datanode10
+    hostname: datanode10
+    restart: always
+    depends_on:
+      - namenode
+    volumes:
+      - datanode10:/hadoop/dfs/data
+    environment:
+      - SERVICE_PRECONDITION=namenode:9870
+    env_file:
+      - ./hadoop.env
+
+volumes:
+  namenode:
+  datanode1:
+  datanode2:
+  datanode3:
+  datanode4:
+  datanode5:
+  datanode6:
+  datanode7:
+  datanode8:
+  datanode9:
+  datanode10:
