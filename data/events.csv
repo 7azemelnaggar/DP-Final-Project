@@ -1,0 +1,11 @@
+event_id,name,venue,location,date_time,category,total_seats,status
+E001,Coldplay World Tour,Cairo International Stadium,Cairo,2026-09-15T20:00:00,Concert,5000,upcoming
+E002,Cairo Jazz Festival,Cairo Opera House,Cairo,2026-09-22T19:30:00,Concert,1200,upcoming
+E003,Egypt vs Nigeria,Alexandria Stadium,Alexandria,2026-10-01T18:00:00,Sports,15000,upcoming
+E004,Hamlet - National Theatre,Alexandria National Theatre,Alexandria,2026-09-10T19:00:00,Theater,600,upcoming
+E005,Tech Summit 2026,New Cairo Convention Center,Cairo,2026-11-05T09:00:00,Conference,2000,upcoming
+E006,Amr Diab Live,Giza Pyramids Grounds,Giza,2026-12-20T21:00:00,Concert,8000,upcoming
+E007,Stand-up Comedy Night,Alexandria Comedy Club,Alexandria,2026-08-30T21:00:00,Comedy,300,upcoming
+E008,Cairo Marathon Expo,Cairo Festival City,Cairo,2026-11-15T08:00:00,Sports,4000,upcoming
+E009,Classical Symphony Night,Cairo Opera House,Cairo,2026-10-18T19:00:00,Concert,1200,upcoming
+E010,Startup Pitch Day,Alexandria Business Hub,Alexandria,2026-09-28T10:00:00,Conference,500,upcoming

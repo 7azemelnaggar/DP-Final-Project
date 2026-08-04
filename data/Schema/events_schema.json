@@ -1,0 +1,47 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Event",
+  "description": "Schema for an event record in the Distributed Ticket Reservation System",
+  "type": "object",
+  "properties": {
+    "event_id": {
+      "type": "string",
+      "description": "Unique identifier for the event (primary key)",
+      "pattern": "^E[0-9]{3,}$"
+    },
+    "name": {
+      "type": "string",
+      "description": "Event title"
+    },
+    "venue": {
+      "type": "string",
+      "description": "Name of the venue"
+    },
+    "location": {
+      "type": "string",
+      "description": "City where the venue is located"
+    },
+    "date_time": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Date and time of the event (ISO 8601)"
+    },
+    "category": {
+      "type": "string",
+      "enum": ["Concert", "Sports", "Theater", "Conference", "Comedy"],
+      "description": "Type of event"
+    },
+    "total_seats": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Total seat capacity for the event"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["upcoming", "ongoing", "completed", "cancelled"],
+      "description": "Current status of the event"
+    }
+  },
+  "required": ["event_id", "name", "venue", "location", "date_time", "category", "total_seats", "status"],
+  "additionalProperties": false
+}

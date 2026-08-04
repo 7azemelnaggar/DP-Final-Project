@@ -1,0 +1,33 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "User",
+  "description": "Schema for a user record in the Distributed Ticket Reservation System",
+  "type": "object",
+  "properties": {
+    "user_id": {
+      "type": "string",
+      "description": "Unique identifier for the user (primary key)",
+      "pattern": "^U[0-9]{3,}$"
+    },
+    "name": {
+      "type": "string",
+      "description": "Full name of the user"
+    },
+    "email": {
+      "type": "string",
+      "format": "email",
+      "description": "Contact email address"
+    },
+    "phone": {
+      "type": "string",
+      "description": "Contact phone number"
+    },
+    "registration_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date the user registered"
+    }
+  },
+  "required": ["user_id", "name", "email", "phone", "registration_date"],
+  "additionalProperties": false
+}

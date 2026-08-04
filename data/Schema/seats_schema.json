@@ -1,0 +1,47 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Seat",
+  "description": "Schema for a seat record in the Distributed Ticket Reservation System",
+  "type": "object",
+  "properties": {
+    "seat_id": {
+      "type": "string",
+      "description": "Unique identifier for the seat (primary key)",
+      "pattern": "^S[0-9]{5,}$"
+    },
+    "event_id": {
+      "type": "string",
+      "description": "References Event.event_id (foreign key)",
+      "pattern": "^E[0-9]{3,}$"
+    },
+    "section": {
+      "type": "string",
+      "description": "Seating section (e.g. A, B, C, VIP)"
+    },
+    "row": {
+      "type": "string",
+      "description": "Row number within the section"
+    },
+    "seat_number": {
+      "type": "string",
+      "description": "Seat number within the row"
+    },
+    "price": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Ticket price for this seat"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["available", "booked"],
+      "description": "Current booking status of the seat"
+    },
+    "user_id": {
+      "type": ["string", "null"],
+      "description": "References User.user_id (foreign key); null if seat is not booked",
+      "pattern": "^U[0-9]{3,}$"
+    }
+  },
+  "required": ["seat_id", "event_id", "section", "row", "seat_number", "price", "status", "user_id"],
+  "additionalProperties": false
+}
