@@ -22,7 +22,7 @@ Distributed Ticket Reservation System - Part 1 Run Instructions
 
 5. Upload the sample CSV/JSON data into HDFS:
 
-   python upload_to_hdfs.py --namenode http://localhost:9870 --local-dir ./data
+   python3 upload_to_hdfs.py --namenode http://localhost:9870 --local-dir ./data
 
 6. List the uploaded HDFS files:
 
@@ -30,7 +30,7 @@ Distributed Ticket Reservation System - Part 1 Run Instructions
 
 7. Read back and verify the uploaded data:
 
-   python verify_hdfs.py --namenode http://localhost:9870 --local-dir ./data
+   python3 verify_hdfs.py --namenode http://localhost:9870 --local-dir ./data
 
 8. Expected HDFS paths:
 
