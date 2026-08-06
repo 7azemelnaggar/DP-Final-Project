@@ -12,7 +12,15 @@ import argparse
 import os
 import sys
 
-from hdfs import InsecureClient
+try:
+    from hdfs import InsecureClient
+except ImportError:
+    print(
+        "[ERROR] Missing dependency: install requirements with "
+        "`python -m pip install -r requirements.txt`.",
+        file=sys.stderr,
+    )
+    sys.exit(1)
 
 
 # Files we expect to upload, and the HDFS path they should land at.
@@ -24,15 +32,20 @@ FILES_TO_UPLOAD = {
 
 
 def upload_files(client: InsecureClient, local_dir: str) -> None:
+    missing_files = [
+        os.path.join(local_dir, filename)
+        for filename in FILES_TO_UPLOAD
+        if not os.path.isfile(os.path.join(local_dir, filename))
+    ]
+    if missing_files:
+        missing = "\n  - ".join(missing_files)
+        raise FileNotFoundError(f"Required sample data file(s) missing:\n  - {missing}")
+
     # Make sure the target directory exists in HDFS.
     client.makedirs("/data")
 
     for filename, hdfs_path in FILES_TO_UPLOAD.items():
         local_path = os.path.join(local_dir, filename)
-
-        if not os.path.isfile(local_path):
-            print(f"[SKIP] {local_path} not found locally.")
-            continue
 
         print(f"[UPLOAD] {local_path} -> {hdfs_path}")
         # overwrite=True so the script is safely re-runnable
@@ -44,12 +57,12 @@ def upload_files(client: InsecureClient, local_dir: str) -> None:
         hdfs_size = status["length"]
 
         if local_size != hdfs_size:
-            print(
-                f"[WARN] Size mismatch for {filename}: "
+            raise ValueError(
+                f"Size mismatch for {filename}: "
                 f"local={local_size} bytes, hdfs={hdfs_size} bytes"
             )
-        else:
-            print(f"[OK] {filename} uploaded successfully ({hdfs_size} bytes)")
+
+        print(f"[OK] {filename} uploaded successfully ({hdfs_size} bytes)")
 
 
 def main():

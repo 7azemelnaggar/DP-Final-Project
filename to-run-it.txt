@@ -1,0 +1,50 @@
+Distributed Ticket Reservation System - Part 1 Run Instructions
+
+1. Open a terminal in the project folder:
+
+   cd C:\Users\HP\Desktop\DP-Final-Project\DP-Final-Project
+
+2. Install the Python dependency used by the WebHDFS scripts:
+
+   python -m pip install -r requirements.txt
+
+3. Start the Hadoop HDFS cluster:
+
+   docker compose up -d
+
+4. Confirm that the cluster has 1 namenode and 10 datanodes:
+
+   docker compose ps
+
+   Optional HDFS health report:
+
+   docker exec namenode hdfs dfsadmin -report
+
+5. Upload the sample CSV/JSON data into HDFS:
+
+   python upload_to_hdfs.py --namenode http://localhost:9870 --local-dir ./data
+
+6. List the uploaded HDFS files:
+
+   docker exec namenode hdfs dfs -ls /data
+
+7. Read back and verify the uploaded data:
+
+   python verify_hdfs.py --namenode http://localhost:9870 --local-dir ./data
+
+8. Expected HDFS paths:
+
+   /data/events.csv
+   /data/users.csv
+   /data/seats.json
+
+9. Optional cleanup after grading:
+
+   docker compose down
+
+Notes:
+- The HDFS web interface is available at http://localhost:9870.
+- The cluster is defined as 1 master node, `namenode`, and 10 worker nodes,
+  `datanode1` through `datanode10`.
+- The verification script fails if any required file is missing, if HDFS
+  contents do not match the local files, or if referential integrity checks fail.
