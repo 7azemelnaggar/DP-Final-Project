@@ -1,0 +1,29 @@
+seat_id,event_id,event_name,venue,location,date_time,user_id,user_name,email,phone,section,row,seat_number,price
+S00001,E001,Coldplay World Tour,Cairo International Stadium,Cairo,2026-09-15T20:00:00,U012,Mostafa Nabil,mostafa.nabil@example.com,01166677788,A,1,24,45.5
+S00002,E001,Coldplay World Tour,Cairo International Stadium,Cairo,2026-09-15T20:00:00,U002,Mona Hassan,mona.hassan@example.com,01098765432,A,18,3,51.81
+S00005,E001,Coldplay World Tour,Cairo International Stadium,Cairo,2026-09-15T20:00:00,U004,Nour Ibrahim,nour.ibrahim@example.com,01234567890,A,6,23,48.45
+S00006,E001,Coldplay World Tour,Cairo International Stadium,Cairo,2026-09-15T20:00:00,U006,Omar Khaled,omar.khaled@example.com,01011122233,C,4,3,47.6
+S00007,E002,Cairo Jazz Festival,Cairo Opera House,Cairo,2026-09-22T19:30:00,U015,Salma Ezzat,salma.ezzat@example.com,01099887766,C,2,24,49.19
+S00009,E002,Cairo Jazz Festival,Cairo Opera House,Cairo,2026-09-22T19:30:00,U004,Nour Ibrahim,nour.ibrahim@example.com,01234567890,C,19,7,54.09
+S00010,E002,Cairo Jazz Festival,Cairo Opera House,Cairo,2026-09-22T19:30:00,U005,Sara Mahmoud,sara.mahmoud@example.com,01187654321,C,3,28,44.66
+S00011,E002,Cairo Jazz Festival,Cairo Opera House,Cairo,2026-09-22T19:30:00,U005,Sara Mahmoud,sara.mahmoud@example.com,01187654321,VIP,12,6,122.4
+S00014,E003,Egypt vs Nigeria,Alexandria Stadium,Alexandria,2026-10-01T18:00:00,U014,Tarek Fouad,tarek.fouad@example.com,01011223344,B,11,27,55.37
+S00015,E003,Egypt vs Nigeria,Alexandria Stadium,Alexandria,2026-10-01T18:00:00,U010,Hassan Tarek,hassan.tarek@example.com,01033344455,A,11,13,45.35
+S00018,E003,Egypt vs Nigeria,Alexandria Stadium,Alexandria,2026-10-01T18:00:00,U004,Nour Ibrahim,nour.ibrahim@example.com,01234567890,C,19,14,57.96
+S00019,E004,Hamlet - National Theatre,Alexandria National Theatre,Alexandria,2026-09-10T19:00:00,U002,Mona Hassan,mona.hassan@example.com,01098765432,B,17,16,41.82
+S00025,E005,Tech Summit 2026,New Cairo Convention Center,Cairo,2026-11-05T09:00:00,U003,Youssef Ali,youssef.ali@example.com,01123456789,C,17,20,43.98
+S00026,E005,Tech Summit 2026,New Cairo Convention Center,Cairo,2026-11-05T09:00:00,U006,Omar Khaled,omar.khaled@example.com,01011122233,A,20,11,49.77
+S00028,E005,Tech Summit 2026,New Cairo Convention Center,Cairo,2026-11-05T09:00:00,U013,Rania Gamal,rania.gamal@example.com,01288899900,A,3,24,49.72
+S00032,E006,Amr Diab Live,Giza Pyramids Grounds,Giza,2026-12-20T21:00:00,U006,Omar Khaled,omar.khaled@example.com,01011122233,VIP,17,15,117.42
+S00033,E006,Amr Diab Live,Giza Pyramids Grounds,Giza,2026-12-20T21:00:00,U002,Mona Hassan,mona.hassan@example.com,01098765432,A,19,18,44.6
+S00038,E007,Stand-up Comedy Night,Alexandria Comedy Club,Alexandria,2026-08-30T21:00:00,U011,Yasmin Ashraf,yasmin.ashraf@example.com,01144455566,VIP,14,15,132.28
+S00043,E008,Cairo Marathon Expo,Cairo Festival City,Cairo,2026-11-15T08:00:00,U013,Rania Gamal,rania.gamal@example.com,01288899900,A,18,27,40.3
+S00044,E008,Cairo Marathon Expo,Cairo Festival City,Cairo,2026-11-15T08:00:00,U007,Laila Adel,laila.adel@example.com,01099988877,B,6,14,49.71
+S00045,E008,Cairo Marathon Expo,Cairo Festival City,Cairo,2026-11-15T08:00:00,U015,Salma Ezzat,salma.ezzat@example.com,01099887766,A,6,13,40.04
+S00049,E009,Classical Symphony Night,Cairo Opera House,Cairo,2026-10-18T19:00:00,U010,Hassan Tarek,hassan.tarek@example.com,01033344455,B,2,17,41.6
+S00051,E009,Classical Symphony Night,Cairo Opera House,Cairo,2026-10-18T19:00:00,U011,Yasmin Ashraf,yasmin.ashraf@example.com,01144455566,B,19,20,40.79
+S00052,E009,Classical Symphony Night,Cairo Opera House,Cairo,2026-10-18T19:00:00,U005,Sara Mahmoud,sara.mahmoud@example.com,01187654321,C,9,7,53.39
+S00055,E010,Startup Pitch Day,Alexandria Business Hub,Alexandria,2026-09-28T10:00:00,U015,Salma Ezzat,salma.ezzat@example.com,01099887766,A,3,18,44.26
+S00056,E010,Startup Pitch Day,Alexandria Business Hub,Alexandria,2026-09-28T10:00:00,U008,Karim Sami,karim.sami@example.com,01155566677,C,3,29,44.89
+S00057,E010,Startup Pitch Day,Alexandria Business Hub,Alexandria,2026-09-28T10:00:00,U014,Tarek Fouad,tarek.fouad@example.com,01011223344,C,20,26,53.08
+S00058,E010,Startup Pitch Day,Alexandria Business Hub,Alexandria,2026-09-28T10:00:00,U002,Mona Hassan,mona.hassan@example.com,01098765432,C,4,29,42.69

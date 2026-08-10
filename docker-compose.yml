@@ -154,6 +154,26 @@ services:
     env_file:
       - ./hadoop.env
 
+  uploader:
+    image: python:3.11-slim
+    container_name: hdfs-uploader
+    working_dir: /app
+    volumes:
+      - ./:/app
+    depends_on:
+      - namenode
+      - datanode1
+      - datanode2
+      - datanode3
+      - datanode4
+      - datanode5
+      - datanode6
+      - datanode7
+      - datanode8
+      - datanode9
+      - datanode10
+    command: tail -f /dev/null
+
 volumes:
   namenode:
   datanode1:

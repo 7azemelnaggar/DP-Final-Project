@@ -22,7 +22,12 @@ Distributed Ticket Reservation System - Part 1 Run Instructions
 
 5. Upload the sample CSV/JSON data into HDFS:
 
-   python3 upload_to_hdfs.py --namenode http://localhost:9870 --local-dir ./data
+to install : 
+docker compose exec uploader python -m pip install -r requirements.txt
+
+
+docker compose exec uploader python upload_to_hdfs.py --namenode http://namenode:9870 --local-dir /app/data
+
 
 6. List the uploaded HDFS files:
 
@@ -30,7 +35,14 @@ Distributed Ticket Reservation System - Part 1 Run Instructions
 
 7. Read back and verify the uploaded data:
 
-   python3 verify_hdfs.py --namenode http://localhost:9870 --local-dir ./data
+
+to install : 
+docker compose exec uploader python -m pip install -r requirements.txt
+
+
+
+python verify_hdfs_docker.py --container namenode
+
 
 8. Expected HDFS paths:
 
@@ -43,8 +55,32 @@ Distributed Ticket Reservation System - Part 1 Run Instructions
    docker compose down
 
 Notes:
-- The HDFS web interface is available at http://localhost:9870.
+- The HDFS web interface is available at http://localhost:  .
 - The cluster is defined as 1 master node, `namenode`, and 10 worker nodes,
   `datanode1` through `datanode10`.
 - The verification script fails if any required file is missing, if HDFS
   contents do not match the local files, or if referential integrity checks fail.
+
+
+Part 2 
+
+
+
+
+10-to setup hdfs structure 
+
+very important  
+  
+docker cp C:\Users\HP\Desktop\DP-Final-Project\DP-Final-Project\data\bookings.csv namenode:/app/bookings.csv
+docker cp C:\Users\HP\Desktop\DP-Final-Project\DP-Final-Project\data\events.csv   namenode:/app/events.csv
+docker cp C:\Users\HP\Desktop\DP-Final-Project\DP-Final-Project\data\users.csv    namenode:/app/users.csv	
+
+
+docker exec -it namenode bash /app/01_setup_hdfs.sh	
+
+
+11-to run jobs 
+
+
+
+docker exec -it namenode bash /app/02_run_jobs.sh
