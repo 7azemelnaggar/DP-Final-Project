@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 """
 Job 2: Total Revenue per Event
 For each event_id key, Hadoop groups together its "E" record (event name,
@@ -18,7 +18,7 @@ booking_count = 0
 def emit(key, name, revenue, count):
     if key is None:
         return
-    print(f"{key}\t{name or 'UNKNOWN'}\t{revenue:.2f}\t{count}")
+    print("{}\t{}\t{:.2f}\t{}".format(key, name or "UNKNOWN", revenue, count))
 
 
 for line in sys.stdin:

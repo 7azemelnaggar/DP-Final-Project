@@ -84,3 +84,19 @@ docker exec -it namenode bash /app/01_setup_hdfs.sh
 
 
 docker exec -it namenode bash /app/02_run_jobs.sh
+
+
+
+if theres py problem
+docker exec -it namenode bash
+
+sed -i 's/deb.debian.org/archive.debian.org/g' /etc/apt/sources.list
+sed -i 's/security.debian.org/archive.debian.org/g' /etc/apt/sources.list
+sed -i '/stretch-updates/d' /etc/apt/sources.list
+apt-get -o Acquire::Check-Valid-Until=false update
+apt-get install -y python-minimal
+python --version
+
+exit
+
+docker exec -it namenode bash /app/02_run_jobs.sh

@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 """
 Job 2: Total Revenue per Event  (multi-dataset: events.csv + bookings.csv)
 
@@ -30,7 +30,7 @@ for row in reader:
         if row[0] == "event_id":
             continue
         event_id, name = row[0], row[1]
-        print(f"{event_id}\tE\t{name}")
+        print("{}\tE\t{}".format(event_id, name))
     else:
         # bookings.csv header: seat_id,event_id,event_name,venue,location,
         #                       date_time,user_id,user_name,email,phone,
@@ -38,4 +38,4 @@ for row in reader:
         if row[0] == "seat_id":
             continue
         event_id, price = row[1], row[-1]
-        print(f"{event_id}\tB\t{price}")
+        print("{}\tB\t{}".format(event_id, price))

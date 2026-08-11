@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 """
 Job 1: Total Bookings per Event
 Input : bookings.csv
@@ -16,4 +16,4 @@ for row in reader:
     if row[0] == "seat_id":
         continue
     event_id = row[1]
-    print(f"{event_id}\t1")
+    print("{}\t1".format(event_id))
