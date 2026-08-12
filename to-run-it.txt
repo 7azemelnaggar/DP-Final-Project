@@ -75,6 +75,12 @@ docker cp C:\Users\HP\Desktop\DP-Final-Project\DP-Final-Project\data\bookings.cs
 docker cp C:\Users\HP\Desktop\DP-Final-Project\DP-Final-Project\data\events.csv   namenode:/app/events.csv
 docker cp C:\Users\HP\Desktop\DP-Final-Project\DP-Final-Project\data\users.csv    namenode:/app/users.csv	
 
+IF NOT LOCAL 
+
+
+docker cp data/bookings.csv namenode:/app/bookings.csv
+docker cp data/events.csv namenode:/app/events.csv
+docker cp data/users.csv namenode:/app/users.csv
 
 docker exec -it namenode bash /app/01_setup_hdfs.sh	
 
