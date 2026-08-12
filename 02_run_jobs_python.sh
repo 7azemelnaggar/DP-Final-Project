@@ -35,7 +35,7 @@ run_streaming_job() {
   # shellcheck disable=SC2086
   hadoop jar "$STREAMING_JAR" \
     -D mapreduce.job.reduces=1 \
-    -files "/app/$job_name/mapper.py,/app/$job_name/reducer.py" \
+    -files "/app/jobs/$job_name/mapper.py,/app/jobs/$job_name/reducer.py" \
     -mapper "$PY mapper.py" \
     -reducer "$PY reducer.py" \
     $input_args \
