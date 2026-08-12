@@ -105,4 +105,4 @@ python --version
 
 exit
 
-docker exec -it namenode bash /app/02_run_jobs.sh
+docker exec -it namenode bash /app/02_run_jobs_python.sh
