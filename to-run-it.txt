@@ -75,6 +75,12 @@ docker cp C:\Users\HP\Desktop\DP-Final-Project\DP-Final-Project\data\bookings.cs
 docker cp C:\Users\HP\Desktop\DP-Final-Project\DP-Final-Project\data\events.csv   namenode:/app/events.csv
 docker cp C:\Users\HP\Desktop\DP-Final-Project\DP-Final-Project\data\users.csv    namenode:/app/users.csv	
 
+IF NOT LOCAL 
+
+
+docker cp data/bookings.csv namenode:/app/bookings.csv
+docker cp data/events.csv namenode:/app/events.csv
+docker cp data/users.csv namenode:/app/users.csv
 
 docker exec -it namenode bash /app/01_setup_hdfs.sh	
 
@@ -108,6 +114,7 @@ python --version
 exit
 
 docker exec -it namenode bash /app/02_run_jobs_python.sh
+<<<<<<< HEAD
 
 
 
@@ -143,3 +150,5 @@ part 4 takes Hadoop job output data from:
 
 api:
 http://127.0.0.1:5000/api/job-outputs
+=======
+>>>>>>> e525b71172939aae7147b5128904429e27135636

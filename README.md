@@ -3,6 +3,7 @@
 ## Overview
 
 This project stores ticket reservation data in Hadoop HDFS and runs batch
+<<<<<<< HEAD
 analytics jobs using Hadoop Streaming. The system is split into four main parts:
 
 - Part 1: Data collection and storage in HDFS.
@@ -11,6 +12,12 @@ analytics jobs using Hadoop Streaming. The system is split into four main parts:
   operations.
 - Part 4: Localhost website for viewing seat availability and calling the
   booking service.
+=======
+analytics jobs using Hadoop Streaming. The system is split into two main parts:
+
+- Part 1: Data collection and storage in HDFS.
+- Part 2: Batch processing and analytics using mapper/reducer jobs.
+>>>>>>> e525b71172939aae7147b5128904429e27135636
 
 The project uses Docker to start a Hadoop HDFS cluster with one namenode and ten
 datanodes. The analytics output is saved back to HDFS so it can be reused by
@@ -27,11 +34,14 @@ later project parts, especially Part 4.
 |-- verify_hdfs_docker.py
 |-- 01_setup_hdfs.sh
 |-- 02_run_jobs_python.sh
+<<<<<<< HEAD
 |-- booking_service/
 |   |-- __init__.py
 |   |-- app.py
 |   |-- store.py
 |   `-- test_booking_service.py
+=======
+>>>>>>> e525b71172939aae7147b5128904429e27135636
 |-- data/
 |   |-- bookings.csv
 |   |-- events.csv
@@ -52,8 +62,11 @@ later project parts, especially Part 4.
 |   |-- job6_stats_by_category/
 |   |-- job7_stats_by_date/
 |   `-- job8_top5_users/
+<<<<<<< HEAD
 |-- ui/
 |   `-- index.html
+=======
+>>>>>>> e525b71172939aae7147b5128904429e27135636
 `-- evidence/
     `-- README.md
 ```
@@ -84,7 +97,10 @@ After running the setup script, HDFS uses this structure:
     events.csv
     users.csv
     seats.json
+<<<<<<< HEAD
     booking_changes.csv
+=======
+>>>>>>> e525b71172939aae7147b5128904429e27135636
 
 /data/jobs/member1/
     job1_bookings_per_event/
@@ -109,6 +125,7 @@ After running the setup script, HDFS uses this structure:
 
 The `/data/output/member1/` directory is the handoff location for Part 4.
 
+<<<<<<< HEAD
 ## Part 3: Real-Time Booking Processing
 
 Part 3 is implemented in `booking_service/`. It exposes API endpoints to book
@@ -217,6 +234,20 @@ Run this from the project folder:
 docker compose up -d
 ```
 
+=======
+## Part 1: Data Storage
+
+Part 1 starts the Hadoop cluster and uploads the project data into HDFS.
+
+### Start Docker
+
+Run this from the project folder:
+
+```bash
+docker compose up -d
+```
+
+>>>>>>> e525b71172939aae7147b5128904429e27135636
 Check the containers:
 
 ```bash
@@ -247,7 +278,10 @@ This script:
 
 - creates the HDFS folders;
 - uploads `bookings.csv`, `events.csv`, `users.csv`, and `seats.json`;
+<<<<<<< HEAD
 - uploads each job's `mapper.py` and `reducer.py` into `/data/jobs/member1/`;
+=======
+>>>>>>> e525b71172939aae7147b5128904429e27135636
 - prepares output folders for the analytics jobs.
 
 ### Verify HDFS Data
@@ -357,6 +391,87 @@ Make sure the project has this structure:
 ```text
 jobs/job1_bookings_per_event/mapper.py
 jobs/job1_bookings_per_event/reducer.py
+<<<<<<< HEAD
+=======
+```
+
+Check inside Docker:
+
+```bash
+docker exec -it namenode ls /app/jobs/job1_bookings_per_event
+```
+
+If the files are missing, restart Docker from the project folder:
+
+```bash
+docker compose down
+docker compose up -d
+```
+
+### No Python Interpreter Found
+
+If the script says no Python exists inside the container, install Python 2 on
+the old Debian 9 Hadoop image:
+
+```bash
+docker exec -it namenode bash
+sed -i 's/deb.debian.org/archive.debian.org/g' /etc/apt/sources.list
+sed -i 's/security.debian.org/archive.debian.org/g' /etc/apt/sources.list
+sed -i '/stretch-updates/d' /etc/apt/sources.list
+apt-get -o Acquire::Check-Valid-Until=false update
+apt-get install -y python-minimal
+python --version
+exit
+```
+
+Then run again:
+
+```bash
+docker exec -it namenode bash /app/02_run_jobs_python.sh
+```
+
+### Output Folder Already Exists
+
+Hadoop fails if an output directory already exists. The run script handles this
+by deleting old output before each job:
+
+```bash
+hdfs dfs -rm -r -f "$OUT/$job_name"
+```
+
+So the jobs can be re-run safely.
+
+## Evidence for Grading
+
+Recommended evidence screenshots or text files:
+
+- `docker compose ps`
+- `docker exec namenode hdfs dfsadmin -report`
+- HDFS UI at `http://localhost:9870`
+- `docker exec -it namenode hdfs dfs -ls -R /data`
+- successful output from `01_setup_hdfs.sh`
+- successful output from `02_run_jobs_python.sh`
+- output folders under `/data/output/member1`
+- sample output from each job
+
+## Important Note About Distributed Execution
+
+This project uses HDFS with one namenode and ten datanodes. The Hadoop Streaming
+jobs read input from HDFS and write output back to HDFS.
+
+If the job logs show names like:
+
+```text
+job_local...
+```
+
+then Hadoop is running the MapReduce job in local mode. If the instructor
+requires proof of YARN-based distributed MapReduce execution, the Docker Compose
+file should also include YARN services such as a resourcemanager and
+nodemanager.
+
+    reducer.py
+>>>>>>> e525b71172939aae7147b5128904429e27135636
 ```
 
 Check inside Docker:
