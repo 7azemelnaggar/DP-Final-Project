@@ -1,0 +1,406 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Ticket Booking</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --ink: #17202a;
+        --muted: #5d6d7e;
+        --line: #d8dee8;
+        --surface: #ffffff;
+        --band: #f4f7fb;
+        --accent: #0f766e;
+        --accent-dark: #115e59;
+        --danger: #b42318;
+        --booked: #e9eef6;
+        font-family: Arial, Helvetica, sans-serif;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background: var(--band);
+        color: var(--ink);
+      }
+
+      header {
+        background: var(--surface);
+        border-bottom: 1px solid var(--line);
+        padding: 18px 24px;
+      }
+
+      h1 {
+        margin: 0 0 6px;
+        font-size: 24px;
+        font-weight: 700;
+      }
+
+      main {
+        display: grid;
+        gap: 18px;
+        grid-template-columns: 320px minmax(0, 1fr);
+        padding: 20px 24px 32px;
+      }
+
+      section {
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 16px;
+      }
+
+      label {
+        display: block;
+        color: var(--muted);
+        font-size: 13px;
+        margin-bottom: 6px;
+      }
+
+      select,
+      input,
+      button {
+        width: 100%;
+        min-height: 40px;
+        border-radius: 6px;
+        border: 1px solid var(--line);
+        font: inherit;
+      }
+
+      select,
+      input {
+        background: #fff;
+        padding: 8px 10px;
+      }
+
+      button {
+        cursor: pointer;
+        background: var(--accent);
+        color: white;
+        border-color: var(--accent);
+        font-weight: 700;
+      }
+
+      button.secondary {
+        background: #fff;
+        color: var(--accent-dark);
+      }
+
+      .field {
+        margin-bottom: 14px;
+      }
+
+      .actions {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
+
+      .summary {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(120px, 1fr));
+        gap: 10px;
+        margin-bottom: 16px;
+      }
+
+      .metric {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 12px;
+      }
+
+      .metric strong {
+        display: block;
+        font-size: 22px;
+      }
+
+      .seat-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(92px, 1fr));
+        gap: 8px;
+      }
+
+      .seat {
+        min-height: 68px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 8px;
+        background: #fdfefe;
+        text-align: left;
+      }
+
+      .seat.booked {
+        background: var(--booked);
+        color: var(--muted);
+      }
+
+      .seat.selected {
+        outline: 3px solid rgba(15, 118, 110, 0.25);
+        border-color: var(--accent);
+      }
+
+      .seat-id {
+        display: block;
+        font-weight: 700;
+      }
+
+      .seat-meta {
+        display: block;
+        font-size: 12px;
+        margin-top: 4px;
+      }
+
+      .message {
+        min-height: 42px;
+        margin-top: 14px;
+        padding: 10px;
+        border-radius: 8px;
+        background: #eefbf8;
+        border: 1px solid #b7e4db;
+      }
+
+      .message.error {
+        background: #fff1f0;
+        border-color: #ffccc7;
+        color: var(--danger);
+      }
+
+      .analytics {
+        grid-column: 1 / -1;
+      }
+
+      .analytics-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 12px;
+      }
+
+      .job-output {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        overflow: hidden;
+      }
+
+      .job-output h2 {
+        margin: 0;
+        padding: 10px 12px;
+        background: #edf7f5;
+        font-size: 15px;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13px;
+      }
+
+      th,
+      td {
+        border-top: 1px solid var(--line);
+        padding: 7px 8px;
+        text-align: left;
+        vertical-align: top;
+      }
+
+      th {
+        color: var(--muted);
+        font-weight: 700;
+      }
+
+      @media (max-width: 820px) {
+        main {
+          grid-template-columns: 1fr;
+          padding: 14px;
+        }
+
+        .summary,
+        .actions {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Ticket Booking</h1>
+      <div id="eventTitle">Loading events...</div>
+    </header>
+
+    <main>
+      <section>
+        <div class="field">
+          <label for="eventSelect">Event</label>
+          <select id="eventSelect"></select>
+        </div>
+        <div class="field">
+          <label for="userId">User ID</label>
+          <input id="userId" value="U001" autocomplete="off">
+        </div>
+        <div class="field">
+          <label for="seatId">Selected Seat</label>
+          <input id="seatId" placeholder="Choose a seat" autocomplete="off">
+        </div>
+        <div class="actions">
+          <button id="bookBtn">Book</button>
+          <button id="cancelBtn" class="secondary">Cancel</button>
+        </div>
+        <div id="message" class="message">Choose an event and seat.</div>
+      </section>
+
+      <section>
+        <div class="summary">
+          <div class="metric"><span>Available</span><strong id="availableCount">0</strong></div>
+          <div class="metric"><span>Booked</span><strong id="bookedCount">0</strong></div>
+          <div class="metric"><span>Total</span><strong id="totalCount">0</strong></div>
+        </div>
+        <div id="seatGrid" class="seat-grid"></div>
+      </section>
+
+      <section class="analytics">
+        <div class="actions" style="margin-bottom: 12px;">
+          <button id="refreshJobsBtn" class="secondary">Refresh Job Outputs</button>
+        </div>
+        <div id="analyticsStatus" class="message">Job outputs load from HDFS /data/output/member1.</div>
+        <div id="analyticsGrid" class="analytics-grid"></div>
+      </section>
+    </main>
+
+    <script>
+      const eventSelect = document.querySelector("#eventSelect");
+      const userId = document.querySelector("#userId");
+      const seatId = document.querySelector("#seatId");
+      const message = document.querySelector("#message");
+      const seatGrid = document.querySelector("#seatGrid");
+      const eventTitle = document.querySelector("#eventTitle");
+      const availableCount = document.querySelector("#availableCount");
+      const bookedCount = document.querySelector("#bookedCount");
+      const totalCount = document.querySelector("#totalCount");
+      const analyticsStatus = document.querySelector("#analyticsStatus");
+      const analyticsGrid = document.querySelector("#analyticsGrid");
+      let currentSeats = [];
+
+      async function fetchJson(url, options) {
+        const response = await fetch(url, options);
+        const data = await response.json();
+        if (!response.ok) {
+          throw data;
+        }
+        return data;
+      }
+
+      function showMessage(text, isError = false) {
+        message.textContent = text;
+        message.classList.toggle("error", isError);
+      }
+
+      async function loadEvents() {
+        const data = await fetchJson("/api/events");
+        eventSelect.innerHTML = data.events
+          .map((event) => `<option value="${event.event_id}">${event.event_id} - ${event.name}</option>`)
+          .join("");
+        await loadSeats();
+      }
+
+      async function loadSeats() {
+        const eventId = eventSelect.value;
+        const data = await fetchJson(`/api/events/${eventId}/seats`);
+        currentSeats = data.seats;
+        eventTitle.textContent = data.event
+          ? `${data.event.name} - ${data.event.venue}`
+          : "Event not found";
+        availableCount.textContent = data.available_count;
+        bookedCount.textContent = data.booked_count;
+        totalCount.textContent = data.seats.length;
+        renderSeats();
+      }
+
+      async function loadJobOutputs() {
+        const data = await fetchJson("/api/job-outputs");
+        analyticsStatus.textContent = data.available
+          ? `Loaded job outputs from ${data.output_root}.`
+          : data.message;
+        analyticsStatus.classList.toggle("error", !data.available);
+        analyticsGrid.innerHTML = Object.entries(data.jobs || {})
+          .map(([jobName, job]) => renderJob(jobName, job))
+          .join("");
+      }
+
+      function renderJob(jobName, job) {
+        if (!job.available) {
+          return `<div class="job-output"><h2>${jobName}</h2><div style="padding: 12px;">${job.message}</div></div>`;
+        }
+        const rows = job.rows.slice(0, 5);
+        return `
+          <div class="job-output">
+            <h2>${jobName}</h2>
+            <table>
+              <thead><tr>${job.columns.map((column) => `<th>${column}</th>`).join("")}</tr></thead>
+              <tbody>
+                ${rows.map((row) => `
+                  <tr>${job.columns.map((column) => `<td>${row[column] || ""}</td>`).join("")}</tr>
+                `).join("")}
+              </tbody>
+            </table>
+          </div>
+        `;
+      }
+
+      function renderSeats() {
+        seatGrid.innerHTML = currentSeats
+          .map((seat) => {
+            const selected = seat.seat_id === seatId.value ? " selected" : "";
+            return `
+              <button class="seat ${seat.status}${selected}" data-seat-id="${seat.seat_id}">
+                <span class="seat-id">${seat.seat_id}</span>
+                <span class="seat-meta">${seat.section}${seat.row}-${seat.seat_number}</span>
+                <span class="seat-meta">${seat.status}</span>
+              </button>
+            `;
+          })
+          .join("");
+      }
+
+      async function submit(action) {
+        try {
+          const data = await fetchJson(`/api/${action}`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              user_id: userId.value.trim(),
+              event_id: eventSelect.value,
+              seat_id: seatId.value.trim(),
+            }),
+          });
+          showMessage(data.message);
+          await loadSeats();
+        } catch (error) {
+          showMessage(error.message || "Request failed.", true);
+          await loadSeats();
+        }
+      }
+
+      seatGrid.addEventListener("click", (event) => {
+        const button = event.target.closest("[data-seat-id]");
+        if (!button) return;
+        seatId.value = button.dataset.seatId;
+        renderSeats();
+      });
+
+      eventSelect.addEventListener("change", loadSeats);
+      document.querySelector("#bookBtn").addEventListener("click", () => submit("book"));
+      document.querySelector("#cancelBtn").addEventListener("click", () => submit("cancel"));
+      document.querySelector("#refreshJobsBtn").addEventListener("click", loadJobOutputs);
+
+      loadEvents().catch((error) => showMessage(error.message || "Could not load service.", true));
+      loadJobOutputs().catch((error) => {
+        analyticsStatus.textContent = error.message || "Could not load job outputs.";
+        analyticsStatus.classList.add("error");
+      });
+    </script>
+  </body>
+</html>

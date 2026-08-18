@@ -31,5 +31,14 @@ hdfs dfs -put -f /app/data/events.csv   $RAW/events.csv
 hdfs dfs -put -f /app/data/users.csv    $RAW/users.csv
 hdfs dfs -put -f /app/data/seats.json   $RAW/seats.json
 
+# Upload mapper/reducer source files so the job implementation is also stored
+# in HDFS for grading and downstream handoff.
+for job_dir in /app/jobs/job*; do
+  job_name=$(basename "$job_dir")
+  hdfs dfs -mkdir -p "$JOBS/$job_name"
+  hdfs dfs -put -f "$job_dir/mapper.py" "$JOBS/$job_name/mapper.py"
+  hdfs dfs -put -f "$job_dir/reducer.py" "$JOBS/$job_name/reducer.py"
+done
+
 echo "HDFS layout ready:"
 hdfs dfs -ls -R /data

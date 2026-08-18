@@ -65,11 +65,24 @@
 
 8.to run jobs
 
-![alt text](image-16.png)
-![alt text](image-17.png)
-![alt text](image-18.png)
-![alt text](image-19.png)
 job1 
-![alt text](image-20.png)
+![alt text](image-22.png)
 job2 
 ![alt text](image-21.png)
+
+
+
+job4 
+![alt text](image-23.png)
+
+job5 
+![alt text](image-24.png)
+
+job6
+![alt text](image-25.png)
+
+job7 
+![alt text](image-26.png)
+
+job8
+![alt text](image-27.png)

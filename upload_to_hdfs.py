@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
 upload_to_hdfs.py
-Uploads the sample ticket-reservation data (events.csv, users.csv, seats.json)
-from local disk into HDFS under /data/, using WebHDFS.
+Uploads the sample ticket-reservation data from local disk into HDFS under
+/data/raw/, using WebHDFS.
 
 Usage:
     python3 upload_to_hdfs.py --namenode http://localhost:9870 --local-dir ./data
@@ -23,11 +23,11 @@ except ImportError:
     sys.exit(1)
 
 
-# Files we expect to upload, and the HDFS path they should land at.
 FILES_TO_UPLOAD = {
-    "events.csv": "/data/events.csv",
-    "users.csv": "/data/users.csv",
-    "seats.json": "/data/seats.json",
+    "bookings.csv": "/data/raw/bookings.csv",
+    "events.csv": "/data/raw/events.csv",
+    "users.csv": "/data/raw/users.csv",
+    "seats.json": "/data/raw/seats.json",
 }
 
 
@@ -41,8 +41,7 @@ def upload_files(client: InsecureClient, local_dir: str) -> None:
         missing = "\n  - ".join(missing_files)
         raise FileNotFoundError(f"Required sample data file(s) missing:\n  - {missing}")
 
-    # Make sure the target directory exists in HDFS.
-    client.makedirs("/data")
+    client.makedirs("/data/raw")
 
     for filename, hdfs_path in FILES_TO_UPLOAD.items():
         local_path = os.path.join(local_dir, filename)
@@ -87,7 +86,7 @@ def main():
         print(f"[ERROR] Upload failed: {e}", file=sys.stderr)
         sys.exit(1)
 
-    print("\nDone. Run verify_hdfs.py to confirm the data reads back correctly.")
+    print("\nDone. Run verify_hdfs_docker.py to confirm the data reads back correctly.")
 
 
 if __name__ == "__main__":

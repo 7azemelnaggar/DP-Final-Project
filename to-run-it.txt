@@ -78,6 +78,14 @@ docker cp C:\Users\HP\Desktop\DP-Final-Project\DP-Final-Project\data\users.csv  
 
 docker exec -it namenode bash /app/01_setup_hdfs.sh	
 
+this uploads:
+/data/raw/bookings.csv
+/data/raw/events.csv
+/data/raw/users.csv
+/data/raw/seats.json
+/data/jobs/member1/<job_name>/mapper.py
+/data/jobs/member1/<job_name>/reducer.py
+
 
 11-to run jobs 
 
@@ -99,4 +107,39 @@ python --version
 
 exit
 
-docker exec -it namenode bash /app/02_run_jobs.sh
+docker exec -it namenode bash /app/02_run_jobs_python.sh
+
+
+
+
+
+
+
+part 3 
+
+12-to run py file booking_ service
+
+python booking_service/app.py
+
+or with docker:
+docker compose up booking-service
+
+open:
+http://127.0.0.1:5000
+
+
+part 3 tests
+
+python -m unittest booking_service.test_booking_service -v
+
+
+part 4
+
+the website is served by the booking service at:
+http://127.0.0.1:5000
+
+part 4 takes Hadoop job output data from:
+/data/output/member1
+
+api:
+http://127.0.0.1:5000/api/job-outputs
