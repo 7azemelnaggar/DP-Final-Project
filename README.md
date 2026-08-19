@@ -198,6 +198,8 @@ Useful HDFS environment variables:
 | `BOOKING_HDFS_USER` | `root` |
 | `BOOKING_HDFS_CHANGE_LOG_PATH` | `/data/raw/booking_changes.csv` |
 | `BOOKING_HDFS_ENABLED` | `1` |
+| `BOOKING_HDFS_READ_MODE` | `auto` (`webhdfs` first, then Docker fallback) |
+| `BOOKING_DOCKER_HDFS_CONTAINER` | `namenode` |
 
 ### Concurrency Tests
 
