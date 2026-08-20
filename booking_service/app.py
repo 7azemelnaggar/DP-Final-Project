@@ -14,10 +14,10 @@ from booking_service.store import BookingStore
 UI_DIR = PROJECT_ROOT / "ui"
 
 
-def create_app() -> Flask:
+def create_app(store: BookingStore | None = None, job_outputs: JobOutputReader | None = None) -> Flask:
     app = Flask(__name__, static_folder=str(UI_DIR), static_url_path="")
-    store = BookingStore()
-    job_outputs = JobOutputReader()
+    store = store or BookingStore()
+    job_outputs = job_outputs or JobOutputReader()
     app.config["booking_store"] = store
 
     @app.get("/")
@@ -35,6 +35,14 @@ def create_app() -> Flask:
     @app.get("/api/events/<event_id>/seats")
     def seats(event_id: str):
         return jsonify(store.seat_availability(event_id))
+
+    @app.get("/api/seats")
+    def all_seats():
+        return jsonify(store.all_seats())
+
+    @app.get("/api/users")
+    def users():
+        return jsonify({"users": store.list_users()})
 
     @app.get("/api/job-outputs")
     def analytics():

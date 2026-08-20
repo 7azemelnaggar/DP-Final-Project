@@ -114,7 +114,6 @@ python --version
 exit
 
 docker exec -it namenode bash /app/02_run_jobs_python.sh
-<<<<<<< HEAD
 
 
 
@@ -150,5 +149,28 @@ part 4 takes Hadoop job output data from:
 
 api:
 http://127.0.0.1:5000/api/job-outputs
-=======
->>>>>>> e525b71172939aae7147b5128904429e27135636
+
+
+
+
+
+
+
+| Requirement | Where to Check |
+|---|---|
+| Book Seat function | `booking_service/store.py` → `book_seat()` |
+| Cancel Booking function | `booking_service/store.py` → `cancel_booking()` |
+| Prevent double booking | `booking_service/store.py` uses `threading.RLock()` |
+| Reject already booked seat | `book_seat()` returns `Seat already booked.` |
+| Reject unavailable seat/no seat | `book_seat()` returns `Seat unavailable.` |
+| Current seat status accessible | API: `/api/events/<event_id>/seats` |
+| Store booking changes | `booking_service/runtime/booking_changes.csv` |
+| Store changes in HDFS | uploaded to `/data/raw/booking_changes.csv` when Hadoop is running |
+| Same-seat concurrency test | `booking_service/test_booking_service.py` |
+| Different-seat concurrency test | `booking_service/test_booking_service.py` |
+| Clear result messages | `Booking successful.`, `Seat already booked.`, `Seat unavailable.`, `Booking cancelled.` |
+| Localhost UI | `ui/index.html` |
+| UI displays availability | seat grid + counters in `ui/index.html` |
+| UI can book/cancel | Book and Cancel buttons call API |
+| UI updates after action | `loadSeats()` runs after book/cancel |
+| Takes data from jobs | `/api/job-outputs` reads `/data/output/member1` |

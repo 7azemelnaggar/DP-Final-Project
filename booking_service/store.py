@@ -28,6 +28,7 @@ CHANGE_LOG_FILE = Path(os.getenv("BOOKING_CHANGE_LOG_FILE", RUNTIME_DIR / "booki
 HDFS_URL = os.getenv("BOOKING_HDFS_URL", "http://localhost:9870")
 HDFS_USER = os.getenv("BOOKING_HDFS_USER", "root")
 HDFS_CHANGE_LOG_PATH = os.getenv("BOOKING_HDFS_CHANGE_LOG_PATH", "/data/raw/booking_changes.csv")
+HDFS_SEATS_PATH = os.getenv("BOOKING_HDFS_SEATS_PATH", "/data/raw/seats.json")
 HDFS_ENABLED = os.getenv("BOOKING_HDFS_ENABLED", "1") != "0"
 HDFS_TIMEOUT = float(os.getenv("BOOKING_HDFS_TIMEOUT", "2"))
 
@@ -81,6 +82,40 @@ class BookingStore:
                 "booked_count": sum(1 for seat in event_seats if seat["status"] == "booked"),
                 "seats": sorted(event_seats, key=lambda s: (s["section"], int(s["row"]), int(s["seat_number"]))),
             }
+
+    def all_seats(self) -> dict[str, Any]:
+        with self._lock:
+            seats = [seat.copy() for seat in self.seats.values()]
+            return {
+                "available_count": sum(1 for seat in seats if seat["status"] == "available"),
+                "booked_count": sum(1 for seat in seats if seat["status"] == "booked"),
+                "seats": sorted(
+                    seats,
+                    key=lambda s: (s["event_id"], s["section"], int(s["row"]), int(s["seat_number"])),
+                ),
+            }
+
+    def list_users(self) -> list[dict[str, Any]]:
+        with self._lock:
+            booked_by_user = {user_id: [] for user_id in self.users}
+            for seat in self.seats.values():
+                if seat["status"] == "booked" and seat.get("user_id") in booked_by_user:
+                    booked_by_user[seat["user_id"]].append(
+                        {
+                            "seat_id": seat["seat_id"],
+                            "event_id": seat["event_id"],
+                        }
+                    )
+
+            return [
+                {
+                    **user,
+                    "can_book": True,
+                    "booked_seats": booked_by_user[user_id],
+                    "booked_count": len(booked_by_user[user_id]),
+                }
+                for user_id, user in self.users.items()
+            ]
 
     def book_seat(self, user_id: str, event_id: str, seat_id: str) -> dict[str, Any]:
         with self._lock:
@@ -178,7 +213,21 @@ class BookingStore:
                     "message": message,
                 }
             )
+        self._sync_to_hdfs()
+
+    def _sync_to_hdfs(self) -> None:
         self._sync_change_log_to_hdfs()
+        self._sync_seats_to_hdfs()
+
+    def _sync_seats_to_hdfs(self) -> None:
+        if not HDFS_ENABLED or InsecureClient is None:
+            return
+        try:
+            client = InsecureClient(HDFS_URL, user=HDFS_USER, timeout=HDFS_TIMEOUT)
+            client.makedirs(str(PurePosixPath(HDFS_SEATS_PATH).parent))
+            client.upload(HDFS_SEATS_PATH, str(self.state_file), overwrite=True)
+        except Exception:
+            return
 
     def _sync_change_log_to_hdfs(self) -> None:
         if not HDFS_ENABLED or InsecureClient is None:

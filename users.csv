@@ -1,0 +1,16 @@
+user_id,name,email,phone,registration_date
+U001,Ahmed Farouk,ahmed.farouk@example.com,01012345678,2025-01-12
+U002,Mona Hassan,mona.hassan@example.com,01098765432,2025-02-03
+U003,Youssef Ali,youssef.ali@example.com,01123456789,2025-02-20
+U004,Nour Ibrahim,nour.ibrahim@example.com,01234567890,2025-03-05
+U005,Sara Mahmoud,sara.mahmoud@example.com,01187654321,2025-03-18
+U006,Omar Khaled,omar.khaled@example.com,01011122233,2025-04-01
+U007,Laila Adel,laila.adel@example.com,01099988877,2025-04-15
+U008,Karim Sami,karim.sami@example.com,01155566677,2025-05-02
+U009,Dina Fathy,dina.fathy@example.com,01277788899,2025-05-20
+U010,Hassan Tarek,hassan.tarek@example.com,01033344455,2025-06-01
+U011,Yasmin Ashraf,yasmin.ashraf@example.com,01144455566,2025-06-10
+U012,Mostafa Nabil,mostafa.nabil@example.com,01166677788,2025-06-25
+U013,Rania Gamal,rania.gamal@example.com,01288899900,2025-07-02
+U014,Tarek Fouad,tarek.fouad@example.com,01011223344,2025-07-15
+U015,Salma Ezzat,salma.ezzat@example.com,01099887766,2025-07-28

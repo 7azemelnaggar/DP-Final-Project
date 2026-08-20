@@ -6,6 +6,7 @@ import unittest
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
+from booking_service.app import create_app
 from booking_service.store import BookingStore
 
 
@@ -104,6 +105,64 @@ class BookingConcurrencyTests(unittest.TestCase):
         self.assertEqual("Booking cancelled.", cancelled["message"])
         self.assertEqual("available", store.seats["S10001"]["status"])
         self.assertIsNone(store.seats["S10001"]["user_id"])
+
+    def test_http_booking_updates_all_seats_endpoint(self) -> None:
+        store = self.make_store()
+        store._sync_to_hdfs = lambda: None
+        client = create_app(store=store).test_client()
+
+        response = client.post(
+            "/api/book",
+            json={"user_id": "U001", "event_id": "E001", "seat_id": "S10001"},
+        )
+
+        self.assertEqual(200, response.status_code)
+        state = client.get("/api/seats").get_json()
+        booked = next(seat for seat in state["seats"] if seat["seat_id"] == "S10001")
+        self.assertEqual("booked", booked["status"])
+        self.assertEqual(1, state["booked_count"])
+
+    def test_http_users_show_bookings_and_cancellation_uses_owner(self) -> None:
+        store = self.make_store()
+        store._sync_to_hdfs = lambda: None
+        client = create_app(store=store).test_client()
+
+        booked = client.post(
+            "/api/book",
+            json={"user_id": "U002", "event_id": "E001", "seat_id": "S10001"},
+        )
+        self.assertEqual(200, booked.status_code)
+
+        users = client.get("/api/users").get_json()["users"]
+        owner = next(user for user in users if user["user_id"] == "U002")
+        self.assertTrue(owner["can_book"])
+        self.assertEqual([{"seat_id": "S10001", "event_id": "E001"}], owner["booked_seats"])
+
+        cancelled = client.post(
+            "/api/cancel",
+            json={"user_id": "U002", "event_id": "E001", "seat_id": "S10001"},
+        )
+        self.assertEqual(200, cancelled.status_code)
+
+    def test_http_concurrent_booking_allows_only_one_success(self) -> None:
+        store = self.make_store()
+        store._sync_to_hdfs = lambda: None
+        app = create_app(store=store)
+        user_ids = ["U001", "U002", "U003", "U004", "U005"]
+
+        def book(user_id: str) -> int:
+            with app.test_client() as client:
+                return client.post(
+                    "/api/book",
+                    json={"user_id": user_id, "event_id": "E001", "seat_id": "S10001"},
+                ).status_code
+
+        with ThreadPoolExecutor(max_workers=len(user_ids)) as executor:
+            statuses = list(executor.map(book, user_ids))
+
+        self.assertEqual(1, statuses.count(200))
+        self.assertEqual(4, statuses.count(409))
+        self.assertEqual("booked", store.seats["S10001"]["status"])
 
 
 if __name__ == "__main__":

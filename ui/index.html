@@ -238,9 +238,14 @@
           <label for="eventSelect">Event</label>
           <select id="eventSelect"></select>
         </div>
+        <div class="actions">
+          <button id="refreshSeatsBtn" class="secondary">Refresh Seats</button>
+          <button id="allSeatsBtn" class="secondary">Show All Seats</button>
+        </div>
+        <div id="seatRefreshStatus" class="message">Seat state loads automatically.</div>
         <div class="field">
           <label for="userId">User ID</label>
-          <input id="userId" value="U001" autocomplete="off">
+          <select id="userId"></select>
         </div>
         <div class="field">
           <label for="seatId">Selected Seat</label>
@@ -264,6 +269,14 @@
 
       <section class="analytics">
         <div class="actions" style="margin-bottom: 12px;">
+          <button id="refreshUsersBtn" class="secondary">Refresh Users</button>
+        </div>
+        <div id="usersStatus" class="message">Registered users and their bookings.</div>
+        <div id="usersGrid"></div>
+      </section>
+
+      <section class="analytics">
+        <div class="actions" style="margin-bottom: 12px;">
           <button id="refreshJobsBtn" class="secondary">Refresh Job Outputs</button>
         </div>
         <div id="analyticsStatus" class="message">Job outputs load from HDFS /data/output/member1.</div>
@@ -281,9 +294,15 @@
       const availableCount = document.querySelector("#availableCount");
       const bookedCount = document.querySelector("#bookedCount");
       const totalCount = document.querySelector("#totalCount");
+      const refreshSeatsBtn = document.querySelector("#refreshSeatsBtn");
+      const allSeatsBtn = document.querySelector("#allSeatsBtn");
+      const seatRefreshStatus = document.querySelector("#seatRefreshStatus");
       const analyticsStatus = document.querySelector("#analyticsStatus");
       const analyticsGrid = document.querySelector("#analyticsGrid");
+      const usersStatus = document.querySelector("#usersStatus");
+      const usersGrid = document.querySelector("#usersGrid");
       let currentSeats = [];
+      let showingAllSeats = false;
 
       async function fetchJson(url, options) {
         const response = await fetch(url, options);
@@ -307,16 +326,48 @@
         await loadSeats();
       }
 
+      async function loadUsers() {
+        const data = await fetchJson("/api/users");
+        const selectedUser = userId.value || "U001";
+        userId.innerHTML = data.users
+          .map((user) => `<option value="${user.user_id}">${user.user_id} - ${user.name}</option>`)
+          .join("");
+        userId.value = data.users.some((user) => user.user_id === selectedUser)
+          ? selectedUser
+          : data.users[0]?.user_id || "";
+        usersStatus.textContent = `${data.users.length} users can book seats.`;
+        usersGrid.innerHTML = `
+          <table>
+            <thead><tr><th>User</th><th>Contact</th><th>Can book</th><th>Booked seats</th></tr></thead>
+            <tbody>
+              ${data.users.map((user) => `
+                <tr>
+                  <td>${user.user_id} - ${user.name}</td>
+                  <td>${user.email}<br>${user.phone}</td>
+                  <td>${user.can_book ? "Yes" : "No"}</td>
+                  <td>${user.booked_seats.length
+                    ? user.booked_seats.map((booking) => `${booking.event_id}/${booking.seat_id}`).join(", ")
+                    : "None"}</td>
+                </tr>
+              `).join("")}
+            </tbody>
+          </table>
+        `;
+      }
+
       async function loadSeats() {
         const eventId = eventSelect.value;
-        const data = await fetchJson(`/api/events/${eventId}/seats`);
+        const data = await fetchJson(showingAllSeats ? "/api/seats" : `/api/events/${eventId}/seats`);
         currentSeats = data.seats;
-        eventTitle.textContent = data.event
+        eventTitle.textContent = showingAllSeats
+          ? "All events"
+          : data.event
           ? `${data.event.name} - ${data.event.venue}`
           : "Event not found";
         availableCount.textContent = data.available_count;
         bookedCount.textContent = data.booked_count;
         totalCount.textContent = data.seats.length;
+        seatRefreshStatus.textContent = `Updated ${new Date().toLocaleTimeString()}`;
         renderSeats();
       }
 
@@ -356,10 +407,11 @@
           .map((seat) => {
             const selected = seat.seat_id === seatId.value ? " selected" : "";
             return `
-              <button class="seat ${seat.status}${selected}" data-seat-id="${seat.seat_id}">
+              <button class="seat ${seat.status}${selected}" data-seat-id="${seat.seat_id}" data-event-id="${seat.event_id}" data-user-id="${seat.user_id || ""}">
                 <span class="seat-id">${seat.seat_id}</span>
+                ${showingAllSeats ? `<span class="seat-meta">${seat.event_id}</span>` : ""}
                 <span class="seat-meta">${seat.section}${seat.row}-${seat.seat_number}</span>
-                <span class="seat-meta">${seat.status}</span>
+                <span class="seat-meta">${seat.status}${seat.user_id ? ` - ${seat.user_id}` : ""}</span>
               </button>
             `;
           })
@@ -378,16 +430,22 @@
             }),
           });
           showMessage(data.message);
-          await loadSeats();
+          await Promise.all([loadSeats(), loadUsers()]);
         } catch (error) {
           showMessage(error.message || "Request failed.", true);
-          await loadSeats();
+          await Promise.all([loadSeats(), loadUsers()]);
         }
       }
 
       seatGrid.addEventListener("click", (event) => {
         const button = event.target.closest("[data-seat-id]");
         if (!button) return;
+        if (showingAllSeats) {
+          eventSelect.value = button.dataset.eventId;
+        }
+        if (button.dataset.userId) {
+          userId.value = button.dataset.userId;
+        }
         seatId.value = button.dataset.seatId;
         renderSeats();
       });
@@ -395,9 +453,22 @@
       eventSelect.addEventListener("change", loadSeats);
       document.querySelector("#bookBtn").addEventListener("click", () => submit("book"));
       document.querySelector("#cancelBtn").addEventListener("click", () => submit("cancel"));
+      refreshSeatsBtn.addEventListener("click", loadSeats);
+      document.querySelector("#refreshUsersBtn").addEventListener("click", loadUsers);
+      allSeatsBtn.addEventListener("click", async () => {
+        showingAllSeats = !showingAllSeats;
+        allSeatsBtn.textContent = showingAllSeats ? "Show Selected Event" : "Show All Seats";
+        await loadSeats();
+      });
       document.querySelector("#refreshJobsBtn").addEventListener("click", loadJobOutputs);
 
-      loadEvents().catch((error) => showMessage(error.message || "Could not load service.", true));
+      setInterval(() => Promise.all([loadSeats(), loadUsers()]).catch(() => {}), 5000);
+
+      Promise.all([loadEvents(), loadUsers()]).catch((error) => {
+        showMessage(error.message || "Could not load service.", true);
+        usersStatus.textContent = error.message || "Could not load users.";
+        usersStatus.classList.add("error");
+      });
       loadJobOutputs().catch((error) => {
         analyticsStatus.textContent = error.message || "Could not load job outputs.";
         analyticsStatus.classList.add("error");
